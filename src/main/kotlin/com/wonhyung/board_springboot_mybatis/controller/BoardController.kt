@@ -28,8 +28,16 @@ class BoardController(private val boardService: BoardService) { // 2. 주 생성
     실제로는 저장 후 리다이렉트 하는 것이 일반적*/
     @PostMapping("/save") // 위의 코드와 다른 이유 1. HTTP 메서드 기준
     fun save(boardDTO: BoardDTO): String { // 2. 매개변수의 개수나 타입이 다르면 다른 함수로 인식
-        println("boardDTO = $boardDTO")
-        return "index"
+        println("boardDTO = $boardDTO")  // 전달받은 BoardDTO 내용 출력 (Kotlin 스타일)
+
+        // BoardService의 save 메서드를 호출하여 게시글 데이터 저장
+        boardService.save(boardDTO)
+
+        // 저장 후 리다이렉트가 일반적 (PRG 패턴)
+        // 예: return "redirect:/board/list" // 게시글 목록 페이지로 리다이렉트
+        // 예: return "redirect:/board/${boardDTO.id}" // 저장된 게시글 상세 페이지로 리다이렉트
+
+        return "index" // 현재는 "index.html" 뷰를 직접 렌더링 (디버깅/초기 단계용)
     }
 }
 
