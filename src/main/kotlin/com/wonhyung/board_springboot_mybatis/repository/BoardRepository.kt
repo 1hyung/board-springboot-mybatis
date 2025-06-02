@@ -13,4 +13,10 @@ class BoardRepository(private val sql: SqlSessionTemplate) { // 2. 주 생성자
         // boardDTO 객체가 해당 SQL 문의 파라미터로 전달됩니다.
         sql.insert("Board.save", boardDTO)
     }
+
+    // 데이터베이스에서 모든 게시글 정보를 조회하여 반환하는 메서드
+    fun findAll(): List<BoardDTO> {
+        // MyBatis의 SqlSessionTemplate을 통해 'Board.findAll' 쿼리를 실행
+        return sql.selectList("Board.findAll")
+    }
 }

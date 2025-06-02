@@ -18,5 +18,8 @@ data class BoardDTO(
 
     // val createdAt: String? = null // 작성 시간 (문자열 형태)
 
-val createdAt: LocalDateTime? = null // 실제로는 날짜/시간 타입을 사용하는 것이 좋음
+    val createdAt: LocalDateTime? = null, // 실제로는 날짜/시간 타입을 사용하는 것이 좋음
+
+    val fileAttached: Int = 0,
+
 )

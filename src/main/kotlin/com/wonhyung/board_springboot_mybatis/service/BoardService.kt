@@ -14,6 +14,12 @@ class BoardService(private val boardRepository: BoardRepository) { // 2. 주 생
         boardRepository.save(boardDTO)
     }
 
+    // 모든 게시글 목록을 조회하는 비즈니스 로직 메서드
+    fun findAll(): List<BoardDTO> {
+        // Repository 계층에서 모든 게시글 목록을 조회하여 반환
+        return boardRepository.findAll()
+    }
+
     // (참고용 - 다른 save 함수 예시)
     // fun save(boardDTO: BoardDTO): Long {
     //     // boardRepository.save()가 Long을 반환하도록 설정되어 있을 경우

@@ -3,6 +3,7 @@ package com.wonhyung.board_springboot_mybatis.controller
 import com.wonhyung.board_springboot_mybatis.dto.BoardDTO
 import com.wonhyung.board_springboot_mybatis.service.BoardService
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 
@@ -39,5 +40,24 @@ class BoardController(private val boardService: BoardService) { // 2. 주 생성
 
         return "index" // 현재는 "index.html" 뷰를 직접 렌더링 (디버깅/초기 단계용)
     }
-}
 
+    /** 모든 게시글 목록을 조회하여 뷰에 전달하는 메서드
+     *  HTTP GET 요청을 "/list" 경로로 처리합니다.
+     *  @param model Thymeleaf에 전달할 데이터를 담는 모델 객체
+     *  @return "list" 뷰 이름을 반환하여 templates/list.html을 렌더링합니다.
+     */
+    @GetMapping("/list") // HTTP GET 요청으로 "/list" 경로에 접근할 때 실행됨
+    fun findAll(model: Model): String {
+        // 1. BoardService의 findAll 메서드를 호출해 모든 게시글을 가져옵니다.
+        val boardDTOList: List<BoardDTO> = boardService.findAll()
+
+        // 2. 가져온 게시글 목록을 모델 객체에 담아 뷰에 전달합니다.
+        // 모델에 담긴 "boardList" 이름으로 Thymeleaf에서 사용할 수 있습니다.
+        model.addAttribute("boardList", boardDTOList)
+        System.out.println("boardDTOList = " + boardDTOList)  // 디버깅을 위해 콘솔에 게시글 목록 출력
+
+        // 3. 최종적으로 "list.html" 뷰를 렌더링합니다.
+        // Thymeleaf 뷰 리졸버에 의해 src/main/resources/templates/list.html 파일을 찾아 표시합니다.
+        return "list"
+    }
+}
