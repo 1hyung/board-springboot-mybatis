@@ -1,10 +1,12 @@
 package com.wonhyung.board_springboot_mybatis.controller
 
 import com.wonhyung.board_springboot_mybatis.dto.BoardDTO
+import com.wonhyung.board_springboot_mybatis.dto.BoardListDTO
 import com.wonhyung.board_springboot_mybatis.service.BoardService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 
 @Controller // 1. Spring MVC 컨트롤러임을 나타냅니다.
@@ -42,14 +44,14 @@ class BoardController(private val boardService: BoardService) { // 2. 주 생성
     }
 
     /** 모든 게시글 목록을 조회하여 뷰에 전달하는 메서드
-     *  HTTP GET 요청을 "/list" 경로로 처리합니다.
-     *  @param model Thymeleaf에 전달할 데이터를 담는 모델 객체
-     *  @return "list" 뷰 이름을 반환하여 templates/list.html을 렌더링합니다.
+    HTTP GET 요청을 "/list" 경로로 처리합니다.
+    @param model Thymeleaf에 전달할 데이터를 담는 모델 객체
+    @return "list" 뷰 이름을 반환하여 templates/list.html을 렌더링합니다.
      */
     @GetMapping("/list") // HTTP GET 요청으로 "/list" 경로에 접근할 때 실행됨
     fun findAll(model: Model): String {
         // 1. BoardService의 findAll 메서드를 호출해 모든 게시글을 가져옵니다.
-        val boardDTOList: List<BoardDTO> = boardService.findAll()
+        val boardDTOList: List<BoardListDTO> = boardService.findAll()
 
         // 2. 가져온 게시글 목록을 모델 객체에 담아 뷰에 전달합니다.
         // 모델에 담긴 "boardList" 이름으로 Thymeleaf에서 사용할 수 있습니다.
@@ -59,5 +61,27 @@ class BoardController(private val boardService: BoardService) { // 2. 주 생성
         // 3. 최종적으로 "list.html" 뷰를 렌더링합니다.
         // Thymeleaf 뷰 리졸버에 의해 src/main/resources/templates/list.html 파일을 찾아 표시합니다.
         return "list"
+    }
+
+    /**
+    특정 ID를 가진 게시글의 상세 내용을 조회하는 메서드입니다.
+    HTTP GET 요청을 "/{id}" 경로로 받습니다.
+
+    @param id URL 경로에서 추출한 게시글의 고유 ID (Long 타입)
+    @param model Thymeleaf에 전달할 데이터를 담는 모델 객체
+    @return 뷰 이름 ("detail" 또는 다른 처리)
+     */
+    @GetMapping("/{id}") // HTTP GET 요청을 /{id} 경로로 받습니다. {id}는 경로 변수입니다.
+    fun findById(@PathVariable("id") id: Long, model: Model): String { // @PathVariable을 사용하여 URL의 id 값을 Long 타입으로 받습니다.
+        // 게시글 조회수 처리 (서비스 호출)
+        boardService.updateHits(id)
+        // 게시글 상세 내용 가져오기 (서비스 호출)
+        val boardDTO: BoardDTO? = boardService.findById(id) // boardService.findById(id)를 호출하여 게시글 상세 정보를 가져옵니다.
+
+        model.addAttribute("board", boardDTO) // model.addAttribute("board", boardDTO)를 사용하여 뷰에 데이터를 전달합니다.
+        System.out.println("boardDTO = " + boardDTO)  // 디버깅을 위해 콘솔에 게시글 목록 출력
+
+        // "detail.html" 뷰 반환
+        return "detail" // 최종적으로 "detail.html" 뷰를 렌더링하도록 반환합니다.
     }
 }

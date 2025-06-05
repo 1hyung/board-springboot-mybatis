@@ -1,6 +1,7 @@
 package com.wonhyung.board_springboot_mybatis.service
 
 import com.wonhyung.board_springboot_mybatis.dto.BoardDTO
+import com.wonhyung.board_springboot_mybatis.dto.BoardListDTO
 import com.wonhyung.board_springboot_mybatis.repository.BoardRepository
 import org.springframework.stereotype.Service
 
@@ -15,9 +16,26 @@ class BoardService(private val boardRepository: BoardRepository) { // 2. 주 생
     }
 
     // 모든 게시글 목록을 조회하는 비즈니스 로직 메서드
-    fun findAll(): List<BoardDTO> {
+    fun findAll(): List<BoardListDTO> {
         // Repository 계층에서 모든 게시글 목록을 조회하여 반환
         return boardRepository.findAll()
+    }
+
+    /**
+    특정 ID를 가진 게시글의 조회수를 1 증가시키는 비즈니스 로직 메서드입니다.
+    이 메서드는 컨트롤러에서 게시글 상세 조회 요청이 올 때 호출됩니다.
+
+    @param id 조회수를 증가시킬 게시글의 고유 ID
+     */
+    fun updateHits(id: Long) {
+        boardRepository.updateHits(id) // BoardRepository의 updateHits 메서드를 호출하여 실제 DB 업데이트를 위임합니다.
+        // 여기서는 별다른 비즈니스 로직 없이 바로 Repository를 호출하지만,
+        // 실제로는 조회수 중복 증가 방지(예: 세션 사용), 특정 조건에서의 조회수 증가 등
+        // 추가적인 비즈니스 규칙이 적용될 수 있습니다.
+    }
+
+    fun findById(id: Long): BoardDTO? {
+        return boardRepository.findById(id)
     }
 
     // (참고용 - 다른 save 함수 예시)
