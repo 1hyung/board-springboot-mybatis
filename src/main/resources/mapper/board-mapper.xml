@@ -29,5 +29,10 @@
         from board_table
         where id = #{id}
     </select>
-
+    <update id="update">
+        update board_table
+        set boardTitle=#{boardTitle},
+            boardContents=#{boardContents}
+        where id = #{id}
+    </update>
 </mapper>
